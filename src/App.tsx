@@ -49,7 +49,7 @@ export default function App() {
     });
   };
   
-  const addTag(tag:Tag){
+  const addTag=(tag:Tag)=>{
     setTags(prev=>[...prev,tag])
   }
 
