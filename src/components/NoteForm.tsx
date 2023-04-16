@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import CreatableReactSelect from "react-select/creatable";
 import { v4 as uuidV4 } from "uuid";
 import { NoteData, Tag } from "../App";
-const navigate=useNavigate()
+import {useNavigate} from 'react-router-dom'
 type NoteFormProps = {
   onSubmit: (data: NoteData) => void;
   onAddTag: (tag: Tag) => void;
@@ -12,6 +12,7 @@ type NoteFormProps = {
 };
 
 const NoteForm = ({ onSubmit, onAddTag, availableTags }: NoteFormProps) => {
+  const navigate=useNavigate()
   const titleRef = useRef<HTMLInputElement>(null);
   const markdownRef = useRef<HTMLTextAreaElement>(null);
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
