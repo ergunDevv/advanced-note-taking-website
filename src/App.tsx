@@ -42,24 +42,32 @@ export default function App() {
   }, [notes, tags]);
 
   const onCreateNote = ({ tags, ...data }: NoteData) => {
-    setNotes(prevNotes => {
+    setNotes((prevNotes) => {
       return [
         ...prevNotes,
-        { ...data, id: uuidV4(), tagIds: tags.map(tag => tag.id) },
+        { ...data, id: uuidV4(), tagIds: tags.map((tag) => tag.id) },
       ];
     });
   };
-  
-  const addTag=(tag:Tag)=>{
-    setTags(prev=>[...prev,tag])
-  }
 
+  const addTag = (tag: Tag) => {
+    setTags((prev) => [...prev, tag]);
+  };
 
   return (
     <Container className="my-4">
       <Routes>
-        <Route path="/" element={<NoteList/>} />
-        <Route path="/new" element={<NewNote onSubmit={onCreateNote} onAddTag={addTag} availableTags={tags} />} />
+        <Route path="/" element={<NoteList availableTags={tags} />} />
+        <Route
+          path="/new"
+          element={
+            <NewNote
+              onSubmit={onCreateNote}
+              onAddTag={addTag}
+              availableTags={tags}
+            />
+          }
+        />
 
         <Route path="/:id">
           <Route index element={<h1>Show</h1>} />
@@ -71,4 +79,3 @@ export default function App() {
     </Container>
   );
 }
-
