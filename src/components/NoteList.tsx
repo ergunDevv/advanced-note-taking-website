@@ -1,22 +1,34 @@
-import { Row, Col, Button, Stack, Form } from "react-bootstrap";
+import { Row, Col, Button, Stack, Form, Card,Badge } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import ReactSelect from "react-select";
-import { Note, Tag } from "../App";
+import { Tag } from "../App";
 import { useMemo, useState } from "react";
-import NoteCard from "./NoteCard";
+import styles from "../styles/NotesList.module.css";
+type SimplifiedNote = {
+  tags: Tag[];
+  title: string;
+  id: string;
+};
 
 type NoteListProps = {
   availableTags: Tag[];
-  notes:Note[]
+  notes: SimplifiedNote[];
 };
-const NoteList = ({ availableTags ,notes}: NoteListProps) => {
+const NoteList = ({ availableTags, notes }: NoteListProps) => {
   const [selectedTags, setSelectedTags] = useState<Tag[]>([]);
   const [title, setTitle] = useState("");
-  const filteredNotes = useMemo(()=>{
-    return notes.filter(note=>{
-        return  (title===''|| note.title.toLowerCase().includes(title.toLowerCase()))
+  const filteredNotes = useMemo(() => {
+    return notes.filter(note => {
+      return (
+        (title === "" ||
+          note.title.toLowerCase().includes(title.toLowerCase())) &&
+        (selectedTags.length === 0 ||
+          selectedTags.every(tag =>
+            note.tags.some(noteTag => noteTag.id === tag.id)
+          ))
+      )
     })
-  } , [notes,selectedTags,notes])
+  }, [title, selectedTags, notes])
 
   return (
     <>
@@ -74,11 +86,41 @@ const NoteList = ({ availableTags ,notes}: NoteListProps) => {
       <Row xs={1} sm={2} lg={3} xl={4} className="gap-3">
         {filteredNotes.map((note) => (
           <Col key={note.id}>
-            <NoteCard />
+            <NoteCard id={note.id} title={note.title} tags={note.tags} />
           </Col>
         ))}
       </Row>
     </>
+  );
+};
+
+const NoteCard = ({ id, title, tags }: SimplifiedNote) => {
+  return (
+    <Card
+      as={Link}
+      to={`${id}`}
+      className={`h-100 text-reset text-decoration-none  ${styles.card}`}
+    >
+      <Card.Body>
+        <Stack
+          gap={2}
+          className="align-items-center justify-content-center h-100"
+        >
+          <span className="fs-5">{title}</span>
+          {tags.length > 0 && (
+            <Stack
+              gap={1}
+              direction="horizontal"
+              className="justify-content-center flex-wrap"
+            >
+                {tags.map(tag=>(
+                    <Badge className="text-truncate" key={tag.id}>{tag.label}</Badge>
+                ))}
+            </Stack>
+          )}
+        </Stack>
+      </Card.Body>
+    </Card>
   );
 };
 
