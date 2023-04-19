@@ -6,6 +6,7 @@ import React, { useMemo } from "react";
 import useLocalStorage from "./data/localStorageHook";
 import { v4 as uuidV4 } from "uuid";
 import NoteList from "./components/NoteList";
+import NoteLayout from "./components/NoteLayout";
 export type Note = {
   id: string;
 } & NoteData;
@@ -69,7 +70,7 @@ export default function App() {
           }
         />
 
-        <Route path="/:id">
+        <Route path="/:id" element={<NoteLayout notes={notesWithTags}/>}>
           <Route index element={<h1>Show</h1>} />
           <Route path="edit" element={<h1>edit</h1>} />
         </Route>
