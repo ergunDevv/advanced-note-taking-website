@@ -8,6 +8,7 @@ import { v4 as uuidV4 } from "uuid";
 import NoteList from "./components/NoteList";
 import NoteLayout from "./components/NoteLayout";
 import Note from "./components/Note";
+import EditNote from "./components/EditNote";
 export type Note = {
   id: string;
 } & NoteData;
@@ -52,14 +53,28 @@ export default function App() {
     });
   };
 
+  const onUpdateNote = (id: string, { tags, ...data }: NoteData) => {
+    setNotes((prevNotes) => {
+      return prevNotes.map(note=>{
+        if(note.id===id){
+          return {...note, ...data, tagIds:tags.map(tag=>tag.id)}
+        }else{
+          return note
+        }
+      })
+
+    });
+  };
   const addTag = (tag: Tag) => {
     setTags((prev) => [...prev, tag]);
   };
-
   return (
     <Container className="my-4">
       <Routes>
-        <Route path="/" element={<NoteList notes={notesWithTags} availableTags={tags} />} />
+        <Route
+          path="/"
+          element={<NoteList notes={notesWithTags} availableTags={tags} />}
+        />
         <Route
           path="/new"
           element={
@@ -71,9 +86,18 @@ export default function App() {
           }
         />
 
-        <Route path="/:id" element={<NoteLayout notes={notesWithTags}/>}>
-          <Route index element={<Note/>} />
-          <Route path="edit" element={<h1>edit</h1>} />
+        <Route path="/:id" element={<NoteLayout notes={notesWithTags} />}>
+          <Route index element={<Note />} />
+          <Route
+            path="edit"
+            element={
+              <EditNote
+                onSubmit={onUpdateNote}
+                onAddTag={addTag}
+                availableTags={tags}
+              />
+            }
+          />
         </Route>
 
         <Route path="*" element={<Navigate to="/" />} />
