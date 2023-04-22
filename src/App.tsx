@@ -55,14 +55,18 @@ export default function App() {
 
   const onUpdateNote = (id: string, { tags, ...data }: NoteData) => {
     setNotes((prevNotes) => {
-      return prevNotes.map(note=>{
-        if(note.id===id){
-          return {...note, ...data, tagIds:tags.map(tag=>tag.id)}
-        }else{
-          return note
+      return prevNotes.map((note) => {
+        if (note.id === id) {
+          return { ...note, ...data, tagIds: tags.map((tag) => tag.id) };
+        } else {
+          return note;
         }
-      })
-
+      });
+    });
+  };
+  const onDeleteNote = (id: string) => {
+    setNotes((prevNotes) => {
+      return prevNotes.filter((notes) => notes.id !== id);
     });
   };
   const addTag = (tag: Tag) => {
@@ -87,7 +91,7 @@ export default function App() {
         />
 
         <Route path="/:id" element={<NoteLayout notes={notesWithTags} />}>
-          <Route index element={<Note />} />
+          <Route index element={<Note  onDelete={onDeleteNote}/>} />
           <Route
             path="edit"
             element={
