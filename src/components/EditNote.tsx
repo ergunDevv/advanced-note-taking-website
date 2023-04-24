@@ -4,12 +4,12 @@ import { NoteData, Tag } from "../App";
 import { useNote } from "./NoteLayout";
 
 type EditNoteProps = {
-  onSubmit: (data: NoteData) => void;
-  onAddTag: (tag: Tag) => void;
-  availableTags: Tag[];
-};
+  onSubmit: (id: string, data: NoteData) => void
+  onAddTag: (tag: Tag) => void
+  availableTags: Tag[]
+}
 
-const EditNote = ({ onSubmit, onAddTag, availableTags }: EditNoteProps) => {
+export function EditNote({ onSubmit, onAddTag, availableTags }: EditNoteProps) {
   const note = useNote()
   return (
     <>
@@ -18,13 +18,10 @@ const EditNote = ({ onSubmit, onAddTag, availableTags }: EditNoteProps) => {
         title={note.title}
         markdown={note.markdown}
         tags={note.tags}
-
-        onSubmit={onSubmit}
+        onSubmit={data => onSubmit(note.id, data)}
         onAddTag={onAddTag}
         availableTags={availableTags}
       />
     </>
-  );
-};
-
-export default EditNote;
+  )
+}
